@@ -52,8 +52,9 @@ feature = st.selectbox(
 
 # Get unique times and create a time range dropdown
 times = sorted(data["time"].unique())
-start_time = st.selectbox('Select start time:', times, key="start_time")
-end_time = st.selectbox('Select end time:', times, key="end_time")
+start_time = st.selectbox('Select start time:', times, index=0, key="start_time")
+end_time = st.selectbox('Select end time:', times, index=len(times)-1, key="end_time")
+
 
 # Ensure that the end time is always after the start time
 if start_time >= end_time:
@@ -66,7 +67,7 @@ filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 average_risk = filtered_data['proba'].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-m = folium.Map(location=[13.6773, 100.4554], zoom_start=18, tiles="OpenStreetMap")
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=20, tiles="OpenStreetMap")
 
 heatmap_data = []
 
@@ -79,5 +80,5 @@ for no_board, coord in location_dict.items():
         heatmap_data.append([lat, long, value])
 
 # Add heatmap
-HeatMap(heatmap_data, radius=5).add_to(m)
+HeatMap(heatmap_data, radius=15).add_to(m)
 folium_static(m)
