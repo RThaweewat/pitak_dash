@@ -38,8 +38,12 @@ m = folium.Map(location=[13.6771, 100.455], zoom_start=20, tiles="OpenStreetMap"
 
 heatmap_data = []
 
+# Instead of directly computing mean after grouping, select necessary columns first
+numeric_cols = ['lat', 'long', 'temperature', 'humidity', 'gas_smoke', 'proba']
+grouped_data = filtered_data.groupby('no_board')[numeric_cols].mean()
+
 # Loop to add board data to heatmap_data list for the chosen time period and add clickable markers
-for index, row in filtered_data.groupby('no_board').mean().iterrows():  # Grouping by no_board and taking mean values
+for index, row in grouped_data.iterrows():
     lat, long = row['lat'], row['long']
     value = row[feature]
     heatmap_data.append([lat, long, value])
