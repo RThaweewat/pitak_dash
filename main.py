@@ -65,8 +65,13 @@ for index, row in grouped_data.iterrows():
     ).add_to(m)
 
 # Add heatmap
-HeatMap(heatmap_data, radius=30).add_to(m)
-folium_static(m)
+heatmap = HeatMap(
+    heatmap_data,
+    radius=50,
+    blur=30,
+    max_val=1.0,
+    gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}
+).add_to(m)
 
 # title for streamlit line chart
 st.title("Risk Probability")
