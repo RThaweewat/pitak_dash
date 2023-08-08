@@ -7,6 +7,7 @@ import folium
 from folium.plugins import HeatMap
 import re
 
+
 def dms_to_decimal(dms_lat, dms_long):
     """Convert DMS (Degrees, Minutes, Seconds) to decimal format for latitude and longitude."""
     def dms2dd(dms):
@@ -63,6 +64,19 @@ time_range = selected_time.strftime('%Y-%m-%d %H:%M:%S')
 filtered_data = data[data["time"] == time_range]
 
 m = folium.Map(location=[13.6773, 100.4554], zoom_start=14, tiles="OpenStreetMap")
+
+
+def color_mapper(value):
+    """Maps a value to a color."""
+    if value < 25:
+        return 'green'
+    elif 25 <= value < 50:
+        return 'yellow'
+    elif 50 <= value < 75:
+        return 'orange'
+    else:
+        return 'red'
+
 
 for no_board, coord in location_dict.items():
     lat, long = coord[0], coord[1]
