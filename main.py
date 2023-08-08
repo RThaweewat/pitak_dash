@@ -44,7 +44,7 @@ heatmap_data = []
 
 # Instead of directly computing mean after grouping, select necessary columns first
 numeric_cols = ["lat", "long", "temperature", "humidity", "gas_smoke", "proba"]
-grouped_data = filtered_data.groupby("no_board")[numeric_cols].mean()
+grouped_data = filtered_data.groupby("no_board")[numeric_cols].mean().round(2)
 
 # Loop to add board data to heatmap_data list for the chosen time period and add clickable markers
 for index, row in grouped_data.iterrows():
@@ -54,9 +54,9 @@ for index, row in grouped_data.iterrows():
 
     popup_content = f"""
     **Board No:** {index}<br>
-    **Temperature:** {round(row['temperature', 2])}°C<br>
-    **Humidity:** {round(row['humidity', 2])}%<br>
-    **Risk Probability:** {round(row['proba', 2])}
+    **Temperature:** {row['temperature']}°C<br>
+    **Humidity:** {row['humidity']}%<br>
+    **Risk Probability:** {row['proba']}
     """
 
     folium.Marker(
