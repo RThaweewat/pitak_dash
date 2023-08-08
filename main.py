@@ -7,7 +7,7 @@ import folium
 from folium.plugins import HeatMap
 
 # Load data
-@st.cache
+@st.cache_data
 def load_data():
 	return pd.read_csv("result.csv")
 
@@ -37,9 +37,10 @@ st.title("Interactive Heat Map on Folium")
 # Dropdown menu
 feature = st.selectbox("Choose a feature to plot:", ["temperature", "humidity", "gas_smoke", "proba"])
 
-# Time slider
-times = sorted(data['time'].unique())
-time_range = st.slider("Choose a time:", min_value=times[0], max_value=times[-1], value=times[0], format="string")
+# Convert strings to datetime objects
+times = pd.to_datetime(sorted(data['time'].unique()))
+selected_time = st.slider("Choose a time:", min_value=times.min(), max_value=times.max(), value=times.min())
+time_range = selected_time.strftime('%Y-%m-%d %H:%M:%S')
 
 filtered_data = data[data['time'] == time_range]
 
