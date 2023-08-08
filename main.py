@@ -74,6 +74,8 @@ heatmap = HeatMap(
     gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}
 ).add_to(m)
 
+folium_static(m)
+
 # title for streamlit line chart
 st.subheader("Risk Probability over Time")
 st.line_chart(filtered_data.set_index("time")["proba"])
