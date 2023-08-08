@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import datetime
-import numpy as np
 from streamlit_folium import folium_static
 import folium
 from folium.plugins import HeatMap
@@ -25,9 +24,11 @@ def dms_to_decimal(dms_lat, dms_long):
     long = dms2dd(dms_long)
     return lat, long
 
+
 @st.cache_data
 def load_data():
     return pd.read_csv("result.csv")
+
 
 data = load_data()
 
@@ -49,49 +50,28 @@ feature = st.selectbox(
     "Choose a feature to plot:", ["temperature", "humidity", "gas_smoke", "proba"]
 )
 
-# Convert pandas Timestamps to native datetime objects
-times = (
-    data["time"]
-    .apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
-    .unique()
-)
-times = sorted(times)
-
-selected_index = st.slider("Choose a time:", min_value=0, max_value=len(times)-1, value=0)
-selected_time = times[selected_index]
-time_range = selected_time.strftime('%Y-%m-%d %H:%M:%S')
+# Get unique times and create a time range dropdown
+times = sorted(data["time"].unique())
+time_range = st.selectbox('Select time period:', times)
 
 filtered_data = data[data["time"] == time_range]
 
+# Average risk (assuming 'proba' column represents risk)
+average_risk = filtered_data['proba'].mean()
+st.write(f"Average risk for selected time: {average_risk}")
+
 m = folium.Map(location=[13.6773, 100.4554], zoom_start=14, tiles="OpenStreetMap")
 
-
-def color_mapper(value):
-    """Maps a value to a color."""
-    if value < 25:
-        return 'green'
-    elif 25 <= value < 50:
-        return 'yellow'
-    elif 50 <= value < 75:
-        return 'orange'
-    else:
-        return 'red'
-
+heatmap_data = []
 
 for no_board, coord in location_dict.items():
     lat, long = coord[0], coord[1]
-
     board_data = data[(data['time'] == time_range) & (data['no_board'] == no_board)]
     if not board_data.empty:
         value = board_data[feature].values[0]
-        # Assuming you have a function named color_mapper() which returns a color based on the value
-        folium.CircleMarker(
-            location=[lat, long],
-            radius=10,
-            popup=f"Board: {no_board}, {feature}: {value}",
-            fill=True,
-            fill_color=color_mapper(value),
-            fill_opacity=0.6,
-        ).add_to(m)
+        heatmap_data.append([lat, long, value])
+
+# Add heatmap
+HeatMap(heatmap_data, radius=50).add_to(m)
 
 folium_static(m)
