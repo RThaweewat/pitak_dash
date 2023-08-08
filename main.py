@@ -52,23 +52,30 @@ feature = st.selectbox(
 
 # Get unique times and create a time range dropdown
 times = sorted(data["time"].unique())
-time_range = st.selectbox('Select time period:', times)
+start_time = st.selectbox('Select start time:', times, key="start_time")
+end_time = st.selectbox('Select end time:', times, key="end_time")
 
-filtered_data = data[data["time"] == time_range]
+# Ensure that the end time is always after the start time
+if start_time >= end_time:
+    st.warning("End time must be after start time!")
+    st.stop()
+
+filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 
 # Average risk (assuming 'proba' column represents risk)
 average_risk = filtered_data['proba'].mean()
-st.write(f"Average risk for selected time: {average_risk}")
+st.write(f"Average risk for selected time period: {average_risk}")
 
-m = folium.Map(location=[13.6773, 100.4554], zoom_start=14, tiles="OpenStreetMap")
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=18, tiles="OpenStreetMap")
 
 heatmap_data = []
 
+# Adjust this loop to add all the board data to heatmap_data list for the chosen time period
 for no_board, coord in location_dict.items():
     lat, long = coord[0], coord[1]
-    board_data = data[(data['time'] == time_range) & (data['no_board'] == no_board)]
+    board_data = filtered_data[filtered_data['no_board'] == no_board]
     if not board_data.empty:
-        value = board_data[feature].values[0]
+        value = board_data[feature].mean()  # Average value for the board across time
         heatmap_data.append([lat, long, value])
 
 # Add heatmap
