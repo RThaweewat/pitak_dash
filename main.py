@@ -67,7 +67,8 @@ filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 average_risk = filtered_data['proba'].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-m = folium.Map(location=[13.6773, 100.4554], zoom_start=20, tiles="OpenStreetMap")
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=19, tiles="OpenStreetMap")
+
 
 heatmap_data = []
 
@@ -80,5 +81,5 @@ for no_board, coord in location_dict.items():
         heatmap_data.append([lat, long, value])
 
 # Add heatmap
-HeatMap(heatmap_data, radius=15).add_to(m)
+HeatMap(heatmap_data, radius=12).add_to(m)
 folium_static(m)
