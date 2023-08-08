@@ -65,9 +65,7 @@ for index, row in grouped_data.iterrows():
 HeatMap(heatmap_data, radius=25).add_to(m)
 folium_static(m)
 
-# plot streamlit line chart of proba
-st.line_chart(filtered_data['proba'])
+# title for streamlit line chart
+st.title("Risk Probability")
+st.line_chart(filtered_data.set_index("time")['proba', 'no_board'])
 
-
-
-#%%
