@@ -72,5 +72,5 @@ for no_board, coord in location_dict.items():
         heatmap_data.append([lat, long, value])
 
 # Add heatmap
-HeatMap(heatmap_data, radius=25).add_to(m)
+HeatMap(heatmap_data, radius=5).add_to(m)
 folium_static(m)
