@@ -25,6 +25,8 @@ times = sorted(data["time"].unique())
 start_time = st.selectbox("Select start time:", times, index=0, key="start_time")
 end_time = st.selectbox("Select end time:", times, index=len(times) - 1, key="end_time")
 
+st.subheader("Risk Map")
+
 # Ensure that the end time is always after the start time
 if start_time >= end_time:
     st.warning("End time must be after start time!")
@@ -73,5 +75,5 @@ heatmap = HeatMap(
 ).add_to(m)
 
 # title for streamlit line chart
-st.title("Risk Probability")
+st.subheader("Risk Probability over Time")
 st.line_chart(filtered_data.set_index("time")["proba"])
