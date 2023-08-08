@@ -6,7 +6,25 @@ import numpy as np
 from streamlit_folium import folium_static
 import folium
 from folium.plugins import HeatMap
+import re
 
+
+def dms_to_decimal(dms_lat, dms_long):
+    """Convert DMS (Degrees, Minutes, Seconds) to decimal format for latitude and longitude."""
+    def dms2dd(dms):
+        degrees, minutes, direction = 0, 0, 1
+        dms_match = re.match(r'(\d+)°(\d+)\'([\d.]+)"([NSEW])', dms)
+        if dms_match:
+            degrees = float(dms_match.group(1))
+            minutes = float(dms_match.group(2))
+            seconds = float(dms_match.group(3))
+            if dms_match.group(4) in ['S', 'W']:
+                direction = -1
+        return direction * (degrees + minutes/60 + seconds/3600)
+
+    lat = dms2dd(dms_lat)
+    long = dms2dd(dms_long)
+    return lat, long
 
 # Load data
 @st.cache_data
