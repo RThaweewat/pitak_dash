@@ -52,13 +52,8 @@ feature = st.selectbox(
 
 # Get unique times and create a time range dropdown
 times = sorted(data["time"].unique())
-
-# Create a time input widget for start and end times with minute precision
-start_time = st.time_input('Select start time:', datetime.time(0, 0)).strftime('%H:%M')
-end_time = st.time_input('Select end time:', datetime.time(23, 59)).strftime('%H:%M')
-
-# Filter data based on the chosen times
-filtered_data = data[(data["time"].str.slice(0, 5) >= start_time) & (data["time"].str.slice(0, 5) <= end_time)]
+start_time = st.selectbox('Select start time:', times, index=0, key="start_time")
+end_time = st.selectbox('Select end time:', times, index=len(times)-1, key="end_time")
 
 
 # Ensure that the end time is always after the start time
@@ -66,11 +61,14 @@ if start_time >= end_time:
     st.warning("End time must be after start time!")
     st.stop()
 
+filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
+
 # Average risk (assuming 'proba' column represents risk)
 average_risk = filtered_data['proba'].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-m = folium.Map(location=[13.6773, 100.4554], zoom_start=20, tiles="CartoDB Positron", max_zoom= 30)
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=20, tiles="CartoDB Positron", max_zoom = 30)
+
 
 heatmap_data = []
 
