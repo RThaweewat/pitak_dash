@@ -69,7 +69,6 @@ heatmap = HeatMap(
     heatmap_data,
     radius=50,
     blur=30,
-    max_val=1.0,
     gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}
 ).add_to(m)
 
