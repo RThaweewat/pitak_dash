@@ -14,7 +14,7 @@ def load_data():
 data = load_data()
 
 # Streamlit UI
-st.title("Interactive Heat Map on Folium")
+st.title("Pitak Risk-Map")
 
 feature = st.selectbox(
     "Choose a feature to plot:", ["temperature", "humidity", "gas_smoke", "proba"]
@@ -37,7 +37,7 @@ average_risk = filtered_data["proba"].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
 m = folium.Map(
-    location=[13.6773, 100.4555], zoom_start=19, tiles="OpenStreetMap", max_zoom=30
+    location=[13.6773, 100.4555], zoom_start=21, tiles="OpenStreetMap", max_zoom=30
 )
 
 heatmap_data = []
@@ -65,7 +65,7 @@ for index, row in grouped_data.iterrows():
     ).add_to(m)
 
 # Add heatmap
-HeatMap(heatmap_data, radius=25).add_to(m)
+HeatMap(heatmap_data, radius=30).add_to(m)
 folium_static(m)
 
 # title for streamlit line chart
