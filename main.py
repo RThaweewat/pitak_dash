@@ -53,10 +53,10 @@ for index, row in grouped_data.iterrows():
     heatmap_data.append([lat, long, value])
 
     popup_content = f"""
-    Board No: {index}<br>
-    Temperature: {row['temperature']}°C<br>
-    Humidity: {row['humidity']}%<br>
-    Risk Probability: {row['proba']}
+    **Board No:** {index}<br>
+    **Temperature:** {round(row['temperature', 2])}°C<br>
+    **Humidity:** {round(row['humidity', 2])}%<br>
+    **Risk Probability:** {round(row['proba', 2])}
     """
 
     folium.Marker(
