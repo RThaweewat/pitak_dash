@@ -56,10 +56,13 @@ times = (
 )
 times = sorted(times)
 
-selected_time = st.slider(
-    "Choose a time:", min_value=times[0], max_value=times[-1], value=times[0]
-)
-time_range = selected_time.strftime("%Y-%m-%d %H:%M:%S")
+# Set the slider to select an index
+selected_index = st.slider("Choose a time:", min_value=0, max_value=len(times)-1, value=0)
+
+# Get the selected time based on the index
+selected_time = times[selected_index]
+time_range = selected_time.strftime('%Y-%m-%d %H:%M:%S')
+
 
 filtered_data = data[data["time"] == time_range]
 
