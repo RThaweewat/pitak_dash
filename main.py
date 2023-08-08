@@ -34,7 +34,7 @@ filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 average_risk = filtered_data['proba'].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-m = folium.Map(location=[13.6771, 100.454], zoom_start=20, tiles="OpenStreetMap", max_zoom=30)
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=20, tiles="OpenStreetMap", max_zoom=30)
 
 heatmap_data = []
 
