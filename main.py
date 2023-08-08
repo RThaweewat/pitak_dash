@@ -8,7 +8,7 @@ from folium.plugins import HeatMap
 
 @st.cache_data()
 def load_data():
-    return pd.read_csv("result.csv")
+    return pd.read_csv("result_m.csv")
 
 
 data = load_data()
