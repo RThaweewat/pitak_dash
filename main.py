@@ -66,16 +66,23 @@ time_range = selected_time.strftime('%Y-%m-%d %H:%M:%S')
 
 filtered_data = data[data["time"] == time_range]
 
-m = folium.Map(location=[13.6773, 100.4554], zoom_start=15)
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=14, tiles="OpenStreetMap")
 
-# Create HeatMap
-heat_data = [
-    [row["lat"], row["long"], row[feature]] for index, row in filtered_data.iterrows()
-]
-HeatMap(heat_data).add_to(m)
+for no_board, coord in location_dict.items():
+    lat, long = dms_to_decimal(coord[0], coord[1])
+    # Filter the data for the selected time and the current no_board
+    board_data = data[(data['time'] == time_range) & (data['no_board'] == no_board)]
 
-# Display Folium map with Streamlit
+    if not board_data.empty:
+        value = board_data[feature].values[0]
+        folium.CircleMarker(
+            location=[lat, long],
+            radius=10,
+            popup=f"Board: {no_board}, {feature}: {value}",
+            fill=True,
+            fill_color=color_mapper(value),
+            fill_opacity=0.6,
+        ).add_to(m)
+
+# Display the map in Streamlit
 folium_static(m)
-
-if __name__ == "__main__":
-    st.run()
