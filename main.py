@@ -38,13 +38,14 @@ filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 average_risk = filtered_data["proba"].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-
 token = "pk.eyJ1IjoidGhhd2Vld2F0IiwiYSI6ImNrbzM0bHEycTA3YzMybm9udzlnazdobGsifQ.NwdYPk_pQDYenDfIsdyatg" # your mapbox token
 tileurl = 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.png?access_token=' + str(token)
+attr = "© Mapbox © OpenStreetMap"
 
 m = folium.Map(
-    location=[13.6773, 100.4555], zoom_start=21, tiles=tileurl, max_zoom=30
+    location=[13.6773, 100.4555], zoom_start=21, tiles=tileurl, attr=attr, max_zoom=30
 )
+
 
 heatmap_data = []
 
