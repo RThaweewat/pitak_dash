@@ -1,39 +1,57 @@
+# streamlit_app.py
 import streamlit as st
 import pandas as pd
-from folium.plugins import HeatMap
+import numpy as np
+from streamlit_folium import folium_static
 import folium
-import time
-from datetime import datetime, timedelta
+from folium.plugins import HeatMap
 
-
-@st.cache_data
+# Load data
+@st.cache
 def load_data():
-	df = pd.read_csv('result.csv')
-	df['time'] = pd.to_datetime(df['time'])
-	df['timestamp'] = df['time'].dt.floor('T')
-	df.set_index('time', inplace=True)
-	return df
+	return pd.read_csv("result.csv")
 
+data = load_data()
 
-df = load_data()
+# Convert the location_dict to degrees
+location_dict = {
+	1: ['13°40\'38.3"N', '100°27\'19.6"E'],
+	2: ['3°40\'38.5"N', '100°27\'19.6"E'],
+	3: ['13°40\'38.5"N', '100°27\'19.8"E'],
+	4: ['13°40\'38.3"N', '100°27\'19.8"E']
+}
 
-selected_parameter = st.selectbox('Select parameter for heatmap', ['temperature', 'humidity', 'gas_smoke', 'proba'])
+def dms_to_dd(dms):
+	degrees, minutes, direction = int(dms.split('°')[0]), float(dms.split('°')[1].split("'")[0]), dms.split("'")[-1]
+	dd = degrees + minutes/60.0
+	if direction in ['S', 'W']:
+		dd *= -1
+	return dd
 
-start_time = st.slider("Move slider to change the hour", value=0, max_value=23)
+for key, coords in location_dict.items():
+	location_dict[key] = [dms_to_dd(coords[0]), dms_to_dd(coords[1])]
 
-min_time = datetime.now().replace(hour=start_time, minute=0, second=0)
-max_time = min_time + timedelta(hours=1)
+# Streamlit UI
+st.title("Interactive Heat Map on Folium")
 
-df = df[(df.index >= min_time) & (df.index <= max_time)]
+# Dropdown menu
+feature = st.selectbox("Choose a feature to plot:", ["temperature", "humidity", "gas_smoke", "proba"])
 
-if st.button('Generate HeatMap'):
-	m = folium.Map([13.677305, 100.455444], zoom_start=14)
+# Time slider
+times = sorted(data['time'].unique())
+time_range = st.slider("Choose a time:", min_value=times[0], max_value=times[-1], value=times[0], format="string")
 
-	data = df[['no_board', 'lat', 'long', selected_parameter]].groupby(['no_board']).mean().reset_index().values.tolist()
+filtered_data = data[data['time'] == time_range]
 
-	# plot heatmap
-	HeatMap(data).add_to(m)
+m = folium.Map(location=[13.6773, 100.4554], zoom_start=15)
 
-	folium_display=m._repr_html_()
+# Create HeatMap
+heat_data = [[row['lat'], row['long'], row[feature]] for index, row in filtered_data.iterrows()]
+HeatMap(heat_data).add_to(m)
 
-	st.markdown(folium_display,unsafe_allow_html=True)
+# Display Folium map with Streamlit
+folium_static(m)
+
+if __name__ == '__main__':
+	st.run()
+
