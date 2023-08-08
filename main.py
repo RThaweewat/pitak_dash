@@ -27,7 +27,7 @@ feature = st.selectbox(
     "Choose a feature to plot:", ["temperature", "humidity", "gas_smoke", "proba"]
 )
 
-m = folium.Map(location=[13.6771, 100.457], zoom_start=20, tiles="OpenStreetMap", max_zoom=30)
+m = folium.Map(location=[13.6771, 100.453], zoom_start=20, tiles="OpenStreetMap", max_zoom=30)
 
 heatmap_data = []
 
@@ -50,5 +50,5 @@ for index, row in filtered_data.groupby('no_board').mean().iterrows():  # Groupi
     ).add_to(m)
 
 # Add heatmap
-HeatMap(heatmap_data, radius=25).add_to(m)
+HeatMap(heatmap_data, radius=20).add_to(m)
 folium_static(m)
