@@ -4,14 +4,10 @@ import datetime
 from streamlit_folium import folium_static
 import folium
 from folium.plugins import HeatMap
-import re
 
-
-# Load data
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     return pd.read_csv("result.csv")
-
 
 data = load_data()
 
@@ -26,22 +22,17 @@ feature = st.selectbox(
 times = sorted(data["time"].unique())
 start_time = st.selectbox('Select start time:', times, index=0, key="start_time")
 end_time = st.selectbox('Select end time:', times, index=len(times)-1, key="end_time")
-filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 
 # Ensure that the end time is always after the start time
 if start_time >= end_time:
     st.warning("End time must be after start time!")
     st.stop()
 
+filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
+
 # Average risk (assuming 'proba' column represents risk)
 average_risk = filtered_data['proba'].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
-
-# Filter data based on the chosen times
-filtered_data = data[(data["time"].str.slice(0, 5) >= start_time) & (data["time"].str.slice(0, 5) <= end_time)]
-
-# Streamlit UI
-st.title("Interactive Heat Map on Folium")
 
 m = folium.Map(location=[13.6771, 100.455], zoom_start=20, tiles="OpenStreetMap", max_zoom=30)
 
@@ -54,10 +45,10 @@ for index, row in filtered_data.groupby('no_board').mean().iterrows():  # Groupi
     heatmap_data.append([lat, long, value])
 
     popup_content = f"""
-    Board No: {round(index, 2)}<br>
-    Temperature: {round(row['temperature'], 2)}°C<br>
-    Humidity: {round(row['humidity'], 2)}%<br>
-    Risk Probability: {round(row['proba'], 2)}
+    Board No: {index}<br>
+    Temperature: {row['temperature']}°C<br>
+    Humidity: {row['humidity']}%<br>
+    Risk Probability: {row['proba']}
     """
 
     folium.Marker(
