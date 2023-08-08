@@ -5,6 +5,7 @@ from streamlit_folium import folium_static
 import folium
 from folium.plugins import HeatMap
 
+
 @st.cache(allow_output_mutation=True)
 def load_data():
     return pd.read_csv("result.csv")
@@ -63,3 +64,10 @@ for index, row in grouped_data.iterrows():
 # Add heatmap
 HeatMap(heatmap_data, radius=25).add_to(m)
 folium_static(m)
+
+# plot streamlit line chart of proba
+st.line_chart(filtered_data['proba'])
+
+
+
+#%%
