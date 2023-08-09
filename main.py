@@ -90,10 +90,14 @@ st.subheader("Smoke and Fire Image")
 
 col1, col2 = st.columns(2)
 
+# get current time
+now = datetime.datetime.now()
+current_time = now.strftime("%H:%M:%S")
+
 with col1:
-    st.header("Smoke Detection")
+    st.caption(f"Smoke Detection @ {str(current_time)}")
     st.image("smoke_predict.jpg")
 
 with col2:
-    st.header("Fire Detection")
+    st.caption(f"Fire Detection @ {str(current_time)}")
     st.image("fire_predict.jpg")
