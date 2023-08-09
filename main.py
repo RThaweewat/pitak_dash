@@ -95,7 +95,9 @@ col1, col2 = st.columns(2)
 
 # get current time
 now = datetime.datetime.now()
-current_time = now.strftime("YYYY-MM-DD HH:MM:SS")
+
+# format current time "YYYY-MM-DD HH:MM:SS"
+current_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
 with col1:
     st.caption(f"Smoke Detection @ {str(current_time)}")
