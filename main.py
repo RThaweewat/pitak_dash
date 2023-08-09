@@ -84,3 +84,19 @@ folium_static(m)
 # title for streamlit line chart
 st.subheader("Risk Probability over Time")
 st.line_chart(filtered_data.set_index("time")["proba"])
+
+# display smoke and fire image split half layout 2 images in one row
+st.subheader("Smoke and Fire Image")
+col1, col2 = st.beta_columns(2)
+
+# get current date and time YYYY_MM_DD_HH_MM_SS
+now = datetime.datetime.now()
+current_time = now.strftime("%Y_%m_%d_%H_%M_%S")
+
+# display smoke image
+path_smoke = "smoke_predict.jpg"
+col1.image(path_smoke, caption="Smoke Image", use_column_width=True)
+
+# display fire image
+path_fire = "fire_predict.jpg"
+col2.image(path_fire, caption="Fire Image", use_column_width=True)
