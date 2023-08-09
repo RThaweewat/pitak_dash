@@ -38,8 +38,11 @@ filtered_data = data[(data["time"] >= start_time) & (data["time"] <= end_time)]
 average_risk = filtered_data["proba"].mean()
 st.write(f"Average risk for selected time period: {average_risk}")
 
-token = "pk.eyJ1IjoidGhhd2Vld2F0IiwiYSI6ImNrbzM0bHEycTA3YzMybm9udzlnazdobGsifQ.NwdYPk_pQDYenDfIsdyatg" # your mapbox token
-tileurl = 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.png?access_token=' + str(token)
+token = "pk.eyJ1IjoidGhhd2Vld2F0IiwiYSI6ImNrbzM0bHEycTA3YzMybm9udzlnazdobGsifQ.NwdYPk_pQDYenDfIsdyatg"  # your mapbox token
+tileurl = (
+    "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.png?access_token="
+    + str(token)
+)
 attr = "© Mapbox © OpenStreetMap"
 
 m = folium.Map(
@@ -76,7 +79,7 @@ heatmap = HeatMap(
     heatmap_data,
     radius=50,
     blur=50,
-    gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}
+    gradient={0.2: "blue", 0.4: "lime", 0.6: "orange", 1: "red"},
 ).add_to(m)
 
 folium_static(m)
@@ -92,7 +95,7 @@ col1, col2 = st.columns(2)
 
 # get current time
 now = datetime.datetime.now()
-current_time = now.strftime("%H:%M:%S")
+current_time = now.strftime("YYYY-MM-DD HH:MM:SS")
 
 with col1:
     st.caption(f"Smoke Detection @ {str(current_time)}")
