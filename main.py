@@ -87,16 +87,13 @@ st.line_chart(filtered_data.set_index("time")["proba"])
 
 # display smoke and fire image split half layout 2 images in one row
 st.subheader("Smoke and Fire Image")
-col1, col2 = st.beta_columns(2)
 
-# get current date and time YYYY_MM_DD_HH_MM_SS
-now = datetime.datetime.now()
-current_time = now.strftime("%Y_%m_%d_%H_%M_%S")
+col1, col2, col3 = st.columns(2)
 
-# display smoke image
-path_smoke = "smoke_predict.jpg"
-col1.image(path_smoke, caption="Smoke Image", use_column_width=True)
+with col1:
+    st.header("Smoke Detection")
+    st.image("smoke_predict.jpg")
 
-# display fire image
-path_fire = "fire_predict.jpg"
-col2.image(path_fire, caption="Fire Image", use_column_width=True)
+with col2:
+    st.header("Fire Detection")
+    st.image("fire_predict.jpg")
