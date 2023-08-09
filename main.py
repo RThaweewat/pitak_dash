@@ -88,7 +88,7 @@ st.line_chart(filtered_data.set_index("time")["proba"])
 # display smoke and fire image split half layout 2 images in one row
 st.subheader("Smoke and Fire Image")
 
-col1, col2, col3 = st.columns(2)
+col1, col2 = st.columns(2)
 
 with col1:
     st.header("Smoke Detection")
